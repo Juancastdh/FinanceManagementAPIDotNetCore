@@ -48,6 +48,22 @@ namespace FinanceManagement.API.Controllers
             return CreatedAtAction(nameof(GetFinancialTransactionById), new { id = financialTransaction.Id });
         }
 
+        [HttpGet("Incomes")]
+        [ProducesResponseType(typeof(IEnumerable<FinancialTransaction>), 200)]
+        public IActionResult GetIncomeFinancialTransactions()
+        {
+            IEnumerable<FinancialTransaction> incomeFinancialTransactions = FinancialTransactionsManager.GetIncomeFinancialTransactions();
+            return Ok(incomeFinancialTransactions);
+        }
+
+        [HttpGet("Incomes/Report")]
+        [ProducesResponseType(typeof(FinancialTransactionsReport), 200)]
+        public IActionResult GetIncomeFinancialTransactionsReport()
+        {
+            FinancialTransactionsReport incomeFinancialTransactionsReport = FinancialTransactionsManager.GetIncomeFinancialTransactionsReport();
+            return Ok(incomeFinancialTransactionsReport);
+        }
+
 
 
 

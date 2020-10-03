@@ -49,7 +49,7 @@ namespace FinanceManagement.BusinessLogic.Implementations
             return incomeFinancialTransactionsReport;
         }
 
-        private IEnumerable<FinancialTransaction> GetIncomeFinancialTransactions()
+        public IEnumerable<FinancialTransaction> GetIncomeFinancialTransactions()
         {
             IEnumerable<FinancialTransaction> financialTransactions = FinancialTransactionsRepository.Get();
             IEnumerable<FinancialTransaction> incomeFinancialTransactions = financialTransactions.Where(financialTransaction => financialTransaction.IsExpense == false);

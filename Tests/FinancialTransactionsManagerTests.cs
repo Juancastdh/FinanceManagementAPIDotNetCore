@@ -24,6 +24,7 @@ namespace FinanceManagement.Tests
         [Test]
         public void IncomeReportTransactions_AreOrderedByDate()
         {
+
             FinancialTransaction financialTransaction1 = new FinancialTransaction
             {
                 Id = 1,
@@ -131,6 +132,46 @@ namespace FinanceManagement.Tests
 
             Assert.AreEqual(expectedValue, obtainedValue);
 
+        }
+
+
+        [Test]
+        public void GetIncomeFinancialTransactions_Returns_Incomes_Only()
+        {
+
+            FinancialTransaction incomeTransaction1 = new FinancialTransaction
+            {
+                Id = 1,
+                IsExpense = false,
+            };
+            FinancialTransaction incomeTransaction2 = new FinancialTransaction
+            {
+                Id = 3,
+                IsExpense = false
+            };
+            List<FinancialTransaction> expectedFinancialTransactions = new List<FinancialTransaction>
+            {
+                incomeTransaction1,
+                incomeTransaction2
+            };
+
+            FakeFinancialTransactionsDataAccess.Add(incomeTransaction1);
+            FakeFinancialTransactionsDataAccess.Add(incomeTransaction2);
+            FakeFinancialTransactionsDataAccess.Add(new FinancialTransaction
+            {
+                Id = 2,
+                IsExpense = true
+            });
+            FakeFinancialTransactionsDataAccess.Add(new FinancialTransaction
+            {
+                Id = 4,
+                IsExpense = true
+            });
+
+
+            IEnumerable<FinancialTransaction> obtainedFinancialTransactions = FinancialTransactionsManager.GetIncomeFinancialTransactions();
+
+            CollectionAssert.AreEquivalent(expectedFinancialTransactions, obtainedFinancialTransactions);
         }
 
     }

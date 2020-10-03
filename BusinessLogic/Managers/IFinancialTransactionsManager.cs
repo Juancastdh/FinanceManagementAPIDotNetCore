@@ -11,5 +11,6 @@ namespace FinanceManagement.BusinessLogic.Managers
         IEnumerable<FinancialTransaction> GetFinancialTransactions();
         FinancialTransaction GetFinancialTransactionById(int id);
         FinancialTransactionsReport GetIncomeFinancialTransactionsReport();
+        IEnumerable<FinancialTransaction> GetIncomeFinancialTransactions();
     }
 }
