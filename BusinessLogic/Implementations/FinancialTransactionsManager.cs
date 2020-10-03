@@ -35,19 +35,19 @@ namespace FinanceManagement.BusinessLogic.Implementations
             return financialTransactions;
         }
 
-        public FinancialTransactionsReport GetIncomeFinancialTransactionsReport()
+        public FinancialTransactionsReport GetFinancialTransactionsReportByType(FinancialTransactionType financialTransactionType)
         {
-            IEnumerable<FinancialTransaction> incomeFinancialTransactions = GetFinancialTransactionsByType(FinancialTransactionType.Income).OrderBy(financialTransaction => financialTransaction.Date);       
+            IEnumerable<FinancialTransaction> financialTransactions = GetFinancialTransactionsByType(financialTransactionType).OrderBy(financialTransaction => financialTransaction.Date);       
 
-            decimal totalValue = incomeFinancialTransactions.Sum(financialTransaction => financialTransaction.Value);
+            decimal totalValue = financialTransactions.Sum(financialTransaction => financialTransaction.Value);
 
-            FinancialTransactionsReport incomeFinancialTransactionsReport = new FinancialTransactionsReport
+            FinancialTransactionsReport financialTransactionsReport = new FinancialTransactionsReport
             {
-                FinancialTransactions = incomeFinancialTransactions,
+                FinancialTransactions = financialTransactions,
                 TotalValue = totalValue
             };
 
-            return incomeFinancialTransactionsReport;
+            return financialTransactionsReport;
         }
 
         public void UpdateFinancialTransaction(FinancialTransaction financialTransaction)

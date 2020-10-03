@@ -23,25 +23,27 @@ namespace FinanceManagement.Tests
         }
 
         [Test]
-        public void IncomeReportTransactions_AreOrderedByDate()
+        [TestCase(FinancialTransactionType.Income, false)]
+        [TestCase(FinancialTransactionType.Expense, true)]
+        public void GetFinancialTransactionsReport_Transactions_AreOrderedByDate(FinancialTransactionType financialTransactionType, bool isFinancialTransactionExpense)
         {
 
             FinancialTransaction financialTransaction1 = new FinancialTransaction
             {
                 Id = 1,
-                IsExpense = false,
+                IsExpense = isFinancialTransactionExpense,
                 Date = DateTime.Now.AddDays(-5)
             };
             FinancialTransaction financialTransaction2 = new FinancialTransaction
             {
                 Id = 2,
-                IsExpense = false,
+                IsExpense = isFinancialTransactionExpense,
                 Date = DateTime.Now.AddMonths(-6)
             };
             FinancialTransaction financialTransaction3 = new FinancialTransaction
             {
                 Id = 3,
-                IsExpense = false,
+                IsExpense = isFinancialTransactionExpense,
                 Date = DateTime.Now
             };
             IEnumerable<FinancialTransaction> expectedFinancialTransactions = new List<FinancialTransaction>
@@ -56,7 +58,7 @@ namespace FinanceManagement.Tests
             FakeFinancialTransactionsDataAccess.Add(financialTransaction2);
             FakeFinancialTransactionsDataAccess.Add(financialTransaction3);
 
-            FinancialTransactionsReport obtainedFinancialTransactionsReport = FinancialTransactionsManager.GetIncomeFinancialTransactionsReport();
+            FinancialTransactionsReport obtainedFinancialTransactionsReport = FinancialTransactionsManager.GetFinancialTransactionsReportByType(financialTransactionType);
             IEnumerable<FinancialTransaction> obtainedFinancialTransactions = obtainedFinancialTransactionsReport.FinancialTransactions;
 
             CollectionAssert.AreEqual(expectedFinancialTransactions, obtainedFinancialTransactions);
@@ -65,40 +67,43 @@ namespace FinanceManagement.Tests
 
 
         [Test]
-        public void IncomeReportTransactions_OnlyContainIncomes()
+        [TestCase(FinancialTransactionType.Income, false)]
+        [TestCase(FinancialTransactionType.Expense, true)]
+        public void GetFinancialTransactionsReport_Contains_FinancialTransactions_Of_Specified_Type_Only(FinancialTransactionType financialTransactionType, bool isFinancialTransactionExpense)
         {
 
-            FinancialTransaction incomeTransaction1 = new FinancialTransaction
+            FinancialTransaction financialTransaction1 = new FinancialTransaction
             {
                 Id = 1,
-                IsExpense = false,
+                IsExpense = isFinancialTransactionExpense,
             };
-            FinancialTransaction incomeTransaction2 = new FinancialTransaction
+            FinancialTransaction financialTransaction2 = new FinancialTransaction
             {
                 Id = 3,
-                IsExpense = false
-            };
-            List<FinancialTransaction> expectedFinancialTransactions = new List<FinancialTransaction>
-            {
-                incomeTransaction1,
-                incomeTransaction2
+                IsExpense = isFinancialTransactionExpense
             };
 
-            FakeFinancialTransactionsDataAccess.Add(incomeTransaction1);
-            FakeFinancialTransactionsDataAccess.Add(incomeTransaction2);
+            List<FinancialTransaction> expectedFinancialTransactions = new List<FinancialTransaction>
+            {
+                financialTransaction1,
+                financialTransaction2
+            };
+
+            FakeFinancialTransactionsDataAccess.Add(financialTransaction1);
+            FakeFinancialTransactionsDataAccess.Add(financialTransaction2);
             FakeFinancialTransactionsDataAccess.Add(new FinancialTransaction
             {
                 Id = 2,
-                IsExpense = true
+                IsExpense = !isFinancialTransactionExpense
             });
             FakeFinancialTransactionsDataAccess.Add(new FinancialTransaction
             {
                 Id = 4,
-                IsExpense = true
+                IsExpense = !isFinancialTransactionExpense
             });
 
 
-            FinancialTransactionsReport obtainedFinancialTransactionsReport = FinancialTransactionsManager.GetIncomeFinancialTransactionsReport();
+            FinancialTransactionsReport obtainedFinancialTransactionsReport = FinancialTransactionsManager.GetFinancialTransactionsReportByType(financialTransactionType);
             IEnumerable<FinancialTransaction> obtainedFinancialTransactions = obtainedFinancialTransactionsReport.FinancialTransactions.ToList();
 
             CollectionAssert.AreEquivalent(expectedFinancialTransactions, obtainedFinancialTransactions);
@@ -107,7 +112,9 @@ namespace FinanceManagement.Tests
 
 
         [Test]
-        public void IncomeReportTotalValue_IsSumOfIncomeValues()
+        [TestCase(FinancialTransactionType.Income, false)]
+        [TestCase(FinancialTransactionType.Expense, true)]
+        public void GetFinancialTransactionsReport_TotalValue_Is_Sum_Of_All_FinancialTransaction_Values(FinancialTransactionType financialTransactionType, bool isFinancialTransactionExpense)
         {
 
             decimal expectedValue = 500;
@@ -115,20 +122,23 @@ namespace FinanceManagement.Tests
             FakeFinancialTransactionsDataAccess.Add(new FinancialTransaction
             {
                 Id = 1,
-                Value = 150
+                Value = 150,
+                IsExpense = isFinancialTransactionExpense
             });
             FakeFinancialTransactionsDataAccess.Add(new FinancialTransaction
             {
                 Id = 2,
-                Value = 100
+                Value = 100,
+                IsExpense = isFinancialTransactionExpense
             });
             FakeFinancialTransactionsDataAccess.Add(new FinancialTransaction
             {
                 Id = 3,
-                Value = 250
+                Value = 250,
+                IsExpense = isFinancialTransactionExpense
             });
 
-            FinancialTransactionsReport obtainedFinancialTransactionsReport = FinancialTransactionsManager.GetIncomeFinancialTransactionsReport();
+            FinancialTransactionsReport obtainedFinancialTransactionsReport = FinancialTransactionsManager.GetFinancialTransactionsReportByType(financialTransactionType);
             decimal obtainedValue = obtainedFinancialTransactionsReport.TotalValue;
 
             Assert.AreEqual(expectedValue, obtainedValue);

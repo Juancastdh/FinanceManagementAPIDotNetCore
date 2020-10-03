@@ -61,7 +61,7 @@ namespace FinanceManagement.API.Controllers
         [ProducesResponseType(typeof(FinancialTransactionsReport), 200)]
         public IActionResult GetIncomeFinancialTransactionsReport()
         {
-            FinancialTransactionsReport incomeFinancialTransactionsReport = FinancialTransactionsManager.GetIncomeFinancialTransactionsReport();
+            FinancialTransactionsReport incomeFinancialTransactionsReport = FinancialTransactionsManager.GetFinancialTransactionsReportByType(FinancialTransactionType.Income);
             return Ok(incomeFinancialTransactionsReport);
         }
 
@@ -89,6 +89,13 @@ namespace FinanceManagement.API.Controllers
             return Ok(expenseFinancialTransactions);
         }
 
+        [HttpGet("Expenses/Report")]
+        [ProducesResponseType(typeof(FinancialTransactionsReport), 200)]
+        public IActionResult GetExpenseFinancialTransactionsReport()
+        {
+            FinancialTransactionsReport expenseFinancialTransactionsReport = FinancialTransactionsManager.GetFinancialTransactionsReportByType(FinancialTransactionType.Expense);
+            return Ok(expenseFinancialTransactionsReport);
+        }
 
     }
 }
