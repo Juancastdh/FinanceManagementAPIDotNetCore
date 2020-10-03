@@ -1,4 +1,5 @@
 ﻿using FinanceManagement.BusinessLogic.Managers;
+using FinanceManagement.BusinessLogic.Models.Enums;
 using FinanceManagement.DataRepository;
 using FinanceManagement.DataRepository.Models;
 using System;
@@ -36,7 +37,7 @@ namespace FinanceManagement.BusinessLogic.Implementations
 
         public FinancialTransactionsReport GetIncomeFinancialTransactionsReport()
         {
-            IEnumerable<FinancialTransaction> incomeFinancialTransactions = GetIncomeFinancialTransactions().OrderBy(financialTransaction => financialTransaction.Date);       
+            IEnumerable<FinancialTransaction> incomeFinancialTransactions = GetFinancialTransactionsByType(FinancialTransactionType.Income).OrderBy(financialTransaction => financialTransaction.Date);       
 
             decimal totalValue = incomeFinancialTransactions.Sum(financialTransaction => financialTransaction.Value);
 
@@ -47,14 +48,6 @@ namespace FinanceManagement.BusinessLogic.Implementations
             };
 
             return incomeFinancialTransactionsReport;
-        }
-
-        public IEnumerable<FinancialTransaction> GetIncomeFinancialTransactions()
-        {
-            IEnumerable<FinancialTransaction> financialTransactions = FinancialTransactionsRepository.Get();
-            IEnumerable<FinancialTransaction> incomeFinancialTransactions = financialTransactions.Where(financialTransaction => !financialTransaction.IsExpense);
-
-            return incomeFinancialTransactions;
         }
 
         public void UpdateFinancialTransaction(FinancialTransaction financialTransaction)
@@ -68,12 +61,20 @@ namespace FinanceManagement.BusinessLogic.Implementations
             FinancialTransactionsRepository.Delete(financialTransactionToBeDeleted);
         }
 
-        public IEnumerable<FinancialTransaction> GetExpenseFinancialTransactions()
+        public IEnumerable<FinancialTransaction> GetFinancialTransactionsByType(FinancialTransactionType financialTransactionType)
         {
             IEnumerable<FinancialTransaction> financialTransactions = FinancialTransactionsRepository.Get();
-            IEnumerable<FinancialTransaction> expenseFinancialTransactions = financialTransactions.Where(financialTransaction => financialTransaction.IsExpense);
 
-            return expenseFinancialTransactions;
+            if(financialTransactionType == FinancialTransactionType.Expense)
+            {
+                financialTransactions = financialTransactions.Where(financialTransaction => financialTransaction.IsExpense);
+            }
+            else
+            {
+                financialTransactions = financialTransactions.Where(financialTransaction => !financialTransaction.IsExpense);
+            }
+
+            return financialTransactions;
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using FinanceManagement.BusinessLogic.Implementations;
+using FinanceManagement.BusinessLogic.Models.Enums;
 using FinanceManagement.DataRepository.Models;
 using FinanceManagement.Tests.FakeDataAccess;
 using NUnit.Framework;
@@ -136,82 +137,48 @@ namespace FinanceManagement.Tests
 
 
         [Test]
-        public void GetIncomeFinancialTransactions_Returns_Incomes_Only()
+        [TestCase(FinancialTransactionType.Income, false)]
+        [TestCase(FinancialTransactionType.Expense, true)]
+        public void GetFinancialTransactions_Returns_FinancialTransactions_Of_Specified_Type_Only(FinancialTransactionType financialTransactionType, bool isFinancialTransactionExpense)
         {
 
-            FinancialTransaction incomeTransaction1 = new FinancialTransaction
+            FinancialTransaction financialTransaction1 = new FinancialTransaction
             {
                 Id = 1,
-                IsExpense = false,
+                IsExpense = isFinancialTransactionExpense,
             };
-            FinancialTransaction incomeTransaction2 = new FinancialTransaction
+            FinancialTransaction financialTransaction2 = new FinancialTransaction
             {
                 Id = 3,
-                IsExpense = false
-            };
-            List<FinancialTransaction> expectedFinancialTransactions = new List<FinancialTransaction>
-            {
-                incomeTransaction1,
-                incomeTransaction2
+                IsExpense = isFinancialTransactionExpense
             };
 
-            FakeFinancialTransactionsDataAccess.Add(incomeTransaction1);
-            FakeFinancialTransactionsDataAccess.Add(incomeTransaction2);
+            List<FinancialTransaction> expectedFinancialTransactions = new List<FinancialTransaction>
+            {
+                financialTransaction1,
+                financialTransaction2
+            };
+
+            FakeFinancialTransactionsDataAccess.Add(financialTransaction1);
+            FakeFinancialTransactionsDataAccess.Add(financialTransaction2);
             FakeFinancialTransactionsDataAccess.Add(new FinancialTransaction
             {
                 Id = 2,
-                IsExpense = true
+                IsExpense = !isFinancialTransactionExpense
             });
             FakeFinancialTransactionsDataAccess.Add(new FinancialTransaction
             {
                 Id = 4,
-                IsExpense = true
+                IsExpense = !isFinancialTransactionExpense
             });
 
 
-            IEnumerable<FinancialTransaction> obtainedFinancialTransactions = FinancialTransactionsManager.GetIncomeFinancialTransactions();
+            IEnumerable<FinancialTransaction> obtainedFinancialTransactions = FinancialTransactionsManager.GetFinancialTransactionsByType(financialTransactionType);
 
             CollectionAssert.AreEquivalent(expectedFinancialTransactions, obtainedFinancialTransactions);
         }
 
-        [Test]
-        public void GetExpenseFinancialTransactions_Returns_Expenses_Only()
-        {
-
-            FinancialTransaction expenseTransaction1 = new FinancialTransaction
-            {
-                Id = 1,
-                IsExpense = true,
-            };
-            FinancialTransaction expenseTransaction2 = new FinancialTransaction
-            {
-                Id = 3,
-                IsExpense = true
-            };
-            List<FinancialTransaction> expectedFinancialTransactions = new List<FinancialTransaction>
-            {
-                expenseTransaction1,
-                expenseTransaction2
-            };
-
-            FakeFinancialTransactionsDataAccess.Add(expenseTransaction1);
-            FakeFinancialTransactionsDataAccess.Add(expenseTransaction2);
-            FakeFinancialTransactionsDataAccess.Add(new FinancialTransaction
-            {
-                Id = 2,
-                IsExpense = false
-            });
-            FakeFinancialTransactionsDataAccess.Add(new FinancialTransaction
-            {
-                Id = 4,
-                IsExpense = false
-            });
-
-
-            IEnumerable<FinancialTransaction> obtainedFinancialTransactions = FinancialTransactionsManager.GetExpenseFinancialTransactions();
-
-            CollectionAssert.AreEquivalent(expectedFinancialTransactions, obtainedFinancialTransactions);
-        }
+      
 
     }
 }

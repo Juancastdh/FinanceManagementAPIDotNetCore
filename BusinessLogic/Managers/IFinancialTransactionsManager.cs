@@ -1,4 +1,5 @@
-﻿using FinanceManagement.DataRepository.Models;
+﻿using FinanceManagement.BusinessLogic.Models.Enums;
+using FinanceManagement.DataRepository.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -9,11 +10,12 @@ namespace FinanceManagement.BusinessLogic.Managers
     {
         void AddFinancialTransaction(FinancialTransaction financialTransaction);
         IEnumerable<FinancialTransaction> GetFinancialTransactions();
-        FinancialTransaction GetFinancialTransactionById(int id);
+
+        FinancialTransaction GetFinancialTransactionById(int id);       
         FinancialTransactionsReport GetIncomeFinancialTransactionsReport();
-        IEnumerable<FinancialTransaction> GetIncomeFinancialTransactions();
         void UpdateFinancialTransaction(FinancialTransaction financialTransaction);
         void DeleteFinancialTransactionById(int id);
-        IEnumerable<FinancialTransaction> GetExpenseFinancialTransactions();
+        IEnumerable<FinancialTransaction> GetFinancialTransactionsByType(FinancialTransactionType financialTransactionType);
+
     }
 }

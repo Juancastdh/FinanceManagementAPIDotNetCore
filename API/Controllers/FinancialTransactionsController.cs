@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using FinanceManagement.API.Models;
 using FinanceManagement.BusinessLogic.Managers;
+using FinanceManagement.BusinessLogic.Models.Enums;
 using FinanceManagement.DataRepository.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -52,7 +53,7 @@ namespace FinanceManagement.API.Controllers
         [ProducesResponseType(typeof(IEnumerable<FinancialTransaction>), 200)]
         public IActionResult GetIncomeFinancialTransactions()
         {
-            IEnumerable<FinancialTransaction> incomeFinancialTransactions = FinancialTransactionsManager.GetIncomeFinancialTransactions();
+            IEnumerable<FinancialTransaction> incomeFinancialTransactions = FinancialTransactionsManager.GetFinancialTransactionsByType(FinancialTransactionType.Income);
             return Ok(incomeFinancialTransactions);
         }
 
@@ -84,7 +85,7 @@ namespace FinanceManagement.API.Controllers
         [ProducesResponseType(typeof(IEnumerable<FinancialTransaction>), 200)]
         public IActionResult GetExpenseFinancialTransactions()
         {
-            IEnumerable<FinancialTransaction> expenseFinancialTransactions = FinancialTransactionsManager.GetExpenseFinancialTransactions();
+            IEnumerable<FinancialTransaction> expenseFinancialTransactions = FinancialTransactionsManager.GetFinancialTransactionsByType(FinancialTransactionType.Expense);
             return Ok(expenseFinancialTransactions);
         }
 
