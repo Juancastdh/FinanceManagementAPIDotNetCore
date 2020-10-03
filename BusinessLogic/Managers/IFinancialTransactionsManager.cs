@@ -13,5 +13,6 @@ namespace FinanceManagement.BusinessLogic.Managers
         FinancialTransactionsReport GetIncomeFinancialTransactionsReport();
         IEnumerable<FinancialTransaction> GetIncomeFinancialTransactions();
         void UpdateFinancialTransaction(FinancialTransaction financialTransaction);
+        void DeleteFinancialTransactionById(int id);
     }
 }

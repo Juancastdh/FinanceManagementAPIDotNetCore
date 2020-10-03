@@ -62,5 +62,10 @@ namespace FinanceManagement.BusinessLogic.Implementations
             FinancialTransactionsRepository.Update(financialTransaction);
         }
 
+        public void DeleteFinancialTransactionById(int id)
+        {
+            FinancialTransaction financialTransactionToBeDeleted = GetFinancialTransactionById(id);
+            FinancialTransactionsRepository.Delete(financialTransactionToBeDeleted);
+        }
     }
 }

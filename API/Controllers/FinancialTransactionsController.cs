@@ -72,6 +72,14 @@ namespace FinanceManagement.API.Controllers
             return Ok();
         }
 
+        [HttpDelete("{id}")]
+        [ProducesResponseType(200)]
+        public IActionResult DeleteFinancialTransactionById(int id)
+        {
+            FinancialTransactionsManager.DeleteFinancialTransactionById(id);
+            return Ok();
+        }
+
 
     }
 }
