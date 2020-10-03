@@ -7,10 +7,11 @@ namespace FinanceManagement.BusinessLogic.Managers
 {
     public interface IFinancialTransactionsManager
     {
-        void AddFinancialTransaction(FinancialTransaction income);
+        void AddFinancialTransaction(FinancialTransaction financialTransaction);
         IEnumerable<FinancialTransaction> GetFinancialTransactions();
         FinancialTransaction GetFinancialTransactionById(int id);
         FinancialTransactionsReport GetIncomeFinancialTransactionsReport();
         IEnumerable<FinancialTransaction> GetIncomeFinancialTransactions();
+        void UpdateFinancialTransaction(FinancialTransaction financialTransaction);
     }
 }

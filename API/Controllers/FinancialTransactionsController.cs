@@ -64,7 +64,13 @@ namespace FinanceManagement.API.Controllers
             return Ok(incomeFinancialTransactionsReport);
         }
 
-
+        [HttpPut]
+        [ProducesResponseType(200)]
+        public IActionResult UpdateFinancialTransaction([FromBody]FinancialTransaction financialTransaction)
+        {
+            FinancialTransactionsManager.UpdateFinancialTransaction(financialTransaction);
+            return Ok();
+        }
 
 
     }

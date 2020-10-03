@@ -57,8 +57,10 @@ namespace FinanceManagement.BusinessLogic.Implementations
             return incomeFinancialTransactions;
         }
 
-
-
+        public void UpdateFinancialTransaction(FinancialTransaction financialTransaction)
+        {
+            FinancialTransactionsRepository.Update(financialTransaction);
+        }
 
     }
 }
