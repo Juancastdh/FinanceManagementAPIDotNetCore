@@ -174,5 +174,44 @@ namespace FinanceManagement.Tests
             CollectionAssert.AreEquivalent(expectedFinancialTransactions, obtainedFinancialTransactions);
         }
 
+        [Test]
+        public void GetExpenseFinancialTransactions_Returns_Expenses_Only()
+        {
+
+            FinancialTransaction expenseTransaction1 = new FinancialTransaction
+            {
+                Id = 1,
+                IsExpense = true,
+            };
+            FinancialTransaction expenseTransaction2 = new FinancialTransaction
+            {
+                Id = 3,
+                IsExpense = true
+            };
+            List<FinancialTransaction> expectedFinancialTransactions = new List<FinancialTransaction>
+            {
+                expenseTransaction1,
+                expenseTransaction2
+            };
+
+            FakeFinancialTransactionsDataAccess.Add(expenseTransaction1);
+            FakeFinancialTransactionsDataAccess.Add(expenseTransaction2);
+            FakeFinancialTransactionsDataAccess.Add(new FinancialTransaction
+            {
+                Id = 2,
+                IsExpense = false
+            });
+            FakeFinancialTransactionsDataAccess.Add(new FinancialTransaction
+            {
+                Id = 4,
+                IsExpense = false
+            });
+
+
+            IEnumerable<FinancialTransaction> obtainedFinancialTransactions = FinancialTransactionsManager.GetExpenseFinancialTransactions();
+
+            CollectionAssert.AreEquivalent(expectedFinancialTransactions, obtainedFinancialTransactions);
+        }
+
     }
 }

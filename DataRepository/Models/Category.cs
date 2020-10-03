@@ -18,31 +18,5 @@ namespace FinanceManagement.DataRepository.Models
         [JsonIgnore]
         public virtual ICollection<FinancialTransaction> Financialtransactions { get; set; }
 
-        public override bool Equals(object obj)
-        {
-            Category category = obj as Category;
-
-            if (category == null)
-            {
-                return false;
-            }
-
-            if (category.Id != Id)
-            {
-                return false;
-            }
-
-            if(category.Name != Name)
-            {
-                return false;
-            }
-
-            if(category.Percentage != Percentage)
-            {
-                return false;
-            }
-
-            return true;
-        }
     }
 }
