@@ -80,6 +80,14 @@ namespace FinanceManagement.API.Controllers
             return Ok();
         }
 
+        [HttpGet("Expenses")]
+        [ProducesResponseType(typeof(IEnumerable<FinancialTransaction>), 200)]
+        public IActionResult GetExpenseFinancialTransactions()
+        {
+            IEnumerable<FinancialTransaction> expenseFinancialTransactions = FinancialTransactionsManager.GetExpenseFinancialTransactions();
+            return Ok(expenseFinancialTransactions);
+        }
+
 
     }
 }

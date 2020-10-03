@@ -52,7 +52,7 @@ namespace FinanceManagement.BusinessLogic.Implementations
         public IEnumerable<FinancialTransaction> GetIncomeFinancialTransactions()
         {
             IEnumerable<FinancialTransaction> financialTransactions = FinancialTransactionsRepository.Get();
-            IEnumerable<FinancialTransaction> incomeFinancialTransactions = financialTransactions.Where(financialTransaction => financialTransaction.IsExpense == false);
+            IEnumerable<FinancialTransaction> incomeFinancialTransactions = financialTransactions.Where(financialTransaction => !financialTransaction.IsExpense);
 
             return incomeFinancialTransactions;
         }
@@ -66,6 +66,14 @@ namespace FinanceManagement.BusinessLogic.Implementations
         {
             FinancialTransaction financialTransactionToBeDeleted = GetFinancialTransactionById(id);
             FinancialTransactionsRepository.Delete(financialTransactionToBeDeleted);
+        }
+
+        public IEnumerable<FinancialTransaction> GetExpenseFinancialTransactions()
+        {
+            IEnumerable<FinancialTransaction> financialTransactions = FinancialTransactionsRepository.Get();
+            IEnumerable<FinancialTransaction> expenseFinancialTransactions = financialTransactions.Where(financialTransaction => financialTransaction.IsExpense);
+
+            return expenseFinancialTransactions;
         }
     }
 }
