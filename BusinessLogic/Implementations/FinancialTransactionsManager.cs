@@ -76,5 +76,24 @@ namespace FinanceManagement.BusinessLogic.Implementations
 
             return financialTransactions;
         }
+
+        public FinancialTransactionsReport GetTotalFinancialTransactionsReport()
+        {
+            FinancialTransactionsReport incomeFinancialTransactionsReport = GetFinancialTransactionsReportByType(FinancialTransactionType.Income);
+            FinancialTransactionsReport expenseFinancialTransactionsReport = GetFinancialTransactionsReportByType(FinancialTransactionType.Expense);
+
+            IEnumerable<FinancialTransaction> totalFinancialTransactions = incomeFinancialTransactionsReport.FinancialTransactions.Concat(expenseFinancialTransactionsReport.FinancialTransactions);
+            totalFinancialTransactions = totalFinancialTransactions.OrderBy(financialTransaction => financialTransaction.Date);
+
+            decimal totalValue = incomeFinancialTransactionsReport.TotalValue - expenseFinancialTransactionsReport.TotalValue;
+
+            FinancialTransactionsReport totalFinancialTransactionsReport = new FinancialTransactionsReport
+            {
+                FinancialTransactions = totalFinancialTransactions,
+                TotalValue = totalValue
+            };
+
+            return totalFinancialTransactionsReport;
+        }
     }
 }

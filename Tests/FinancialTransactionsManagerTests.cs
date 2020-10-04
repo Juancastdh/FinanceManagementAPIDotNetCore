@@ -188,7 +188,128 @@ namespace FinanceManagement.Tests
             CollectionAssert.AreEquivalent(expectedFinancialTransactions, obtainedFinancialTransactions);
         }
 
-      
+        [Test]
+        public void GetTotalFinancialTransactionsReport_Transactions_AreOrderedByDate()
+        {
+            FinancialTransaction financialTransaction1 = new FinancialTransaction
+            {
+                Id = 1,
+                IsExpense = true,
+                Date = DateTime.Now.AddDays(-5)
+            };
+            FinancialTransaction financialTransaction2 = new FinancialTransaction
+            {
+                Id = 2,
+                IsExpense = false,
+                Date = DateTime.Now.AddMonths(-6)
+            };
+            FinancialTransaction financialTransaction3 = new FinancialTransaction
+            {
+                Id = 3,
+                IsExpense = true,
+                Date = DateTime.Now
+            };
+            IEnumerable<FinancialTransaction> expectedFinancialTransactions = new List<FinancialTransaction>
+            {
+                financialTransaction1,
+                financialTransaction2,
+                financialTransaction3
+            };
+            expectedFinancialTransactions = expectedFinancialTransactions.OrderBy(financialTransaction => financialTransaction.Date);
+
+            FakeFinancialTransactionsDataAccess.Add(financialTransaction1);
+            FakeFinancialTransactionsDataAccess.Add(financialTransaction2);
+            FakeFinancialTransactionsDataAccess.Add(financialTransaction3);
+
+            FinancialTransactionsReport obtainedFinancialTransactionsReport = FinancialTransactionsManager.GetTotalFinancialTransactionsReport();
+            IEnumerable<FinancialTransaction> obtainedFinancialTransactions = obtainedFinancialTransactionsReport.FinancialTransactions;
+
+            CollectionAssert.AreEqual(expectedFinancialTransactions, obtainedFinancialTransactions);
+        }
+
+        [Test]
+        public void GetTotalFinancialTransactionsReport_Contains_Transactions_Of_Both_Types()
+        {
+
+            FinancialTransaction financialTransaction1 = new FinancialTransaction
+            {
+                Id = 1,
+                IsExpense = true,
+            };
+            FinancialTransaction financialTransaction2 = new FinancialTransaction
+            {
+                Id = 2,
+                IsExpense = false
+            };
+            FinancialTransaction financialTransaction3 = new FinancialTransaction
+            {
+                Id = 3,
+                IsExpense = true
+            };
+            FinancialTransaction financialTransaction4 = new FinancialTransaction
+            {
+                Id = 4,
+                IsExpense = false
+            };
+
+            List<FinancialTransaction> expectedFinancialTransactions = new List<FinancialTransaction>
+            {
+                financialTransaction1,
+                financialTransaction2,
+                financialTransaction3,
+                financialTransaction4
+            };
+
+            FakeFinancialTransactionsDataAccess.Add(financialTransaction1);
+            FakeFinancialTransactionsDataAccess.Add(financialTransaction2);
+            FakeFinancialTransactionsDataAccess.Add(financialTransaction3);
+            FakeFinancialTransactionsDataAccess.Add(financialTransaction4);
+
+
+            FinancialTransactionsReport obtainedFinancialTransactionsReport = FinancialTransactionsManager.GetTotalFinancialTransactionsReport();
+            IEnumerable<FinancialTransaction> obtainedFinancialTransactions = obtainedFinancialTransactionsReport.FinancialTransactions.ToList();
+
+            CollectionAssert.AreEquivalent(expectedFinancialTransactions, obtainedFinancialTransactions);
+        }
+
+        [Test]
+        public void GetTotalFinancialTransactionsReport_TotalValue_Is_TotalIncomValue_Minus_TotalExpenseValue()
+        {
+            decimal expectedValue = 1000;
+            FakeFinancialTransactionsDataAccess.Add(new FinancialTransaction
+            {
+                Id = 1,
+                Value = 1000,
+                IsExpense = false
+            });
+            FakeFinancialTransactionsDataAccess.Add(new FinancialTransaction
+            {
+                Id = 2,
+                Value = 1500,
+                IsExpense = false
+            });
+            FakeFinancialTransactionsDataAccess.Add(new FinancialTransaction
+            {
+                Id = 3,
+                Value = 500,
+                IsExpense = true
+            });
+            FakeFinancialTransactionsDataAccess.Add(new FinancialTransaction
+            {
+                Id = 4,
+                Value = 1000,
+                IsExpense = true
+            });
+
+            FinancialTransactionsReport obtainedFinancialTransactionsReport = FinancialTransactionsManager.GetTotalFinancialTransactionsReport();
+            decimal obtainedValue = obtainedFinancialTransactionsReport.TotalValue;
+
+            Assert.AreEqual(expectedValue, obtainedValue);
+
+        }
+
+
+
 
     }
 }

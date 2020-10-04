@@ -16,6 +16,7 @@ namespace FinanceManagement.BusinessLogic.Managers
         void UpdateFinancialTransaction(FinancialTransaction financialTransaction);
         void DeleteFinancialTransactionById(int id);
         IEnumerable<FinancialTransaction> GetFinancialTransactionsByType(FinancialTransactionType financialTransactionType);
+        FinancialTransactionsReport GetTotalFinancialTransactionsReport();
 
     }
 }

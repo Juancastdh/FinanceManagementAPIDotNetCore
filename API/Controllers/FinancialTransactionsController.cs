@@ -97,5 +97,13 @@ namespace FinanceManagement.API.Controllers
             return Ok(expenseFinancialTransactionsReport);
         }
 
+        [HttpGet("Report")]
+        [ProducesResponseType(typeof(FinancialTransactionsReport), 200)]
+        public IActionResult GetTotalFinancialTransactionsReport()
+        {
+            FinancialTransactionsReport totalFinancialTransactionsReport = FinancialTransactionsManager.GetTotalFinancialTransactionsReport();
+            return Ok(totalFinancialTransactionsReport);
+        }
+
     }
 }
