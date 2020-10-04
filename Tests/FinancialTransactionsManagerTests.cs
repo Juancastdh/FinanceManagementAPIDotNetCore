@@ -13,13 +13,15 @@ namespace FinanceManagement.Tests
     public class FinancialTransactionsManagerTests
     {
         private FakeFinancialTransactionsDataAccess FakeFinancialTransactionsDataAccess;
+        private FakeCategoriesDataAccess FakeCategoriesDataAccess;
         private FinancialTransactionsManager FinancialTransactionsManager;
 
         [SetUp]
         public void Setup()
         {
             FakeFinancialTransactionsDataAccess = new FakeFinancialTransactionsDataAccess();
-            FinancialTransactionsManager = new FinancialTransactionsManager(FakeFinancialTransactionsDataAccess);
+            FakeCategoriesDataAccess = new FakeCategoriesDataAccess();
+            FinancialTransactionsManager = new FinancialTransactionsManager(FakeFinancialTransactionsDataAccess, FakeCategoriesDataAccess);
         }
 
         [Test]
@@ -305,6 +307,45 @@ namespace FinanceManagement.Tests
             decimal obtainedValue = obtainedFinancialTransactionsReport.TotalValue;
 
             Assert.AreEqual(expectedValue, obtainedValue);
+
+        }
+
+        [Test]
+        public void GetFinancialTransactionsByCategoryId_Returns_FinancialTransactions_Of_Specified_Category_Only()
+        {
+            FinancialTransaction financialTransaction1 = new FinancialTransaction
+            {
+                Id = 1,
+                CategoryId = 1
+            };
+            FinancialTransaction financialTransaction2 = new FinancialTransaction
+            {
+                Id = 2,
+                CategoryId = 1
+            };
+
+            IEnumerable<FinancialTransaction> expectedFinancialTransactions = new List<FinancialTransaction>
+            {
+                financialTransaction1,
+                financialTransaction2
+            };
+
+            FakeFinancialTransactionsDataAccess.Add(financialTransaction1);
+            FakeFinancialTransactionsDataAccess.Add(financialTransaction2);
+            FakeFinancialTransactionsDataAccess.Add(new FinancialTransaction
+            {
+                Id = 3,
+                CategoryId = 2
+            });
+            FakeFinancialTransactionsDataAccess.Add(new FinancialTransaction
+            {
+                Id = 4,
+                CategoryId = 3
+            });
+
+            IEnumerable<FinancialTransaction> obtainedFinancialTransactions = FinancialTransactionsManager.GetFinancialTransactionsByCategoryId(1);
+
+            CollectionAssert.AreEquivalent(expectedFinancialTransactions, obtainedFinancialTransactions);
 
         }
 
