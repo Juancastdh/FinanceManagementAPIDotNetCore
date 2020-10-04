@@ -40,6 +40,7 @@ namespace FinanceManagementAPI
             services.AddScoped<IFinancialTransactionsRepository, FinancialTransactionsDataAccess>();
             services.AddScoped<IFinancialTransactionsManager, FinancialTransactionsManager>();
             services.AddScoped<IPeriodsRepository, PeriodsDataAccess>();
+            services.AddScoped<IPeriodsManager, PeriodsManager>();
 
             services.AddSwaggerGen(c =>
             {
