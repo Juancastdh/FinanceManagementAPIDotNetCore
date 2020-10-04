@@ -12,10 +12,12 @@ namespace FinanceManagement.BusinessLogic.Implementations
     public class FinancialTransactionsManager : IFinancialTransactionsManager
     {
         private readonly IFinancialTransactionsRepository FinancialTransactionsRepository;
+        private readonly ICategoriesRepository CategoriesRepository;
 
-        public FinancialTransactionsManager(IFinancialTransactionsRepository financialTransactionsRepository)
+        public FinancialTransactionsManager(IFinancialTransactionsRepository financialTransactionsRepository, ICategoriesRepository categoriesRepository)
         {
             FinancialTransactionsRepository = financialTransactionsRepository;
+            CategoriesRepository = categoriesRepository;
         }
 
         public void AddFinancialTransaction(FinancialTransaction financialTransaction)
@@ -94,6 +96,67 @@ namespace FinanceManagement.BusinessLogic.Implementations
             };
 
             return totalFinancialTransactionsReport;
+        }        
+
+        public decimal GetTotalFinancialTransactionsValueByCategoryId(int categoryId)
+        {
+            decimal totalValue = 0;
+
+            Category category = CategoriesRepository.GetById(categoryId);
+
+            totalValue += GetTotalGeneralTransactionsValueByCategory(category);
+            totalValue += GetTotalCategoryTransactionsValueByCategoryId(categoryId);
+
+            return totalValue;
+        }
+
+        private decimal GetTotalGeneralTransactionsValueByCategory(Category category)
+        {
+            IEnumerable<FinancialTransaction> generalTransactions = GetFinancialTransactionsByCategoryId(category.Id);
+            decimal totalValue = 0;
+
+            foreach (FinancialTransaction transaction in generalTransactions)
+            {
+                if (transaction.IsExpense == false)
+                {
+                    totalValue += transaction.Value * ((decimal)(category.Percentage) / 100);
+                }
+                else
+                {
+                    totalValue -= transaction.Value * ((decimal)(category.Percentage) / 100);
+                }
+            }
+
+
+            return totalValue;
+        }
+
+        private decimal GetTotalCategoryTransactionsValueByCategoryId(int categoryId)
+        {
+            IEnumerable<FinancialTransaction> categoryTransactions = GetFinancialTransactionsByCategoryId(categoryId);
+            decimal totalValue = 0;
+
+            foreach (FinancialTransaction transaction in categoryTransactions)
+            {
+                if (transaction.IsExpense == false)
+                {
+                    totalValue += transaction.Value;
+                }
+                else
+                {
+                    totalValue -= transaction.Value;
+                }
+
+            }
+
+            return totalValue;
+
+        }
+
+        public IEnumerable<FinancialTransaction> GetFinancialTransactionsByCategoryId(int categoryId)
+        {
+            IEnumerable<FinancialTransaction> financialTransactions = FinancialTransactionsRepository.Get().Where(financialTransaction => financialTransaction.CategoryId == categoryId);
+            return financialTransactions;
         }
     }
 }
